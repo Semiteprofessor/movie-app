@@ -1,0 +1,179 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+nav {
+  height: 55px;
+  background: #5b38d2;
+  padding: 8px 20px;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+}
+
+nav .nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .nav-container .logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+nav .nav-container .logo h1 {
+  color: #fff;
+}
+
+.nav-container .search-container input {
+  outline: none;
+  border: none;
+  padding: 10px;
+  width: 25rem;
+  border-radius: 5px;
+  background-color: #6f46f1;
+  color: #fff;
+}
+
+.nav-container .search-container input:focus {
+  border-bottom: 2px solid #2e1d68;
+}
+
+.nav-container .num-results {
+  color: #fff;
+}
+
+.main {
+  background-color: #1c2022;
+  padding: 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  height: 100%;
+}
+
+.main .box {
+  display: flex;
+  flex-direction: column;
+  background-color: #25292d;
+  border-radius: 10px;
+  margin-top: 30px;
+  width: 50%;
+  height: 100vh;
+  position: relative;
+}
+
+.main .box .btn-toggle {
+  color: #fff;
+  background-color: #1c2022;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  top: 15px;
+  right: 15px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  align-self: flex-end;
+  position: absolute;
+}
+
+.main .box .list {
+  list-style: none;
+  cursor: pointer;
+  margin-top: 20px;
+  height: 100%;
+}
+
+.main .box .list li {
+  display: flex;
+  padding: 10px 40px;
+  align-items: center;
+  border-bottom: 2px solid #2b2f31;
+  gap: 30px;
+}
+
+.main .box .list li:hover {
+  background-color: #2b2f31;
+}
+
+.main .box .list li .title {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main .box .list li h3 {
+  color: #fff;
+}
+
+.main .box .list li span {
+  color: #fff;
+}
+
+.main .box .list li img {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.main .box .list li .title div {
+  display: flex;
+  gap: 10px;
+}
+
+.main .box .summary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: #2b2f31;
+  padding: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.main .box .summary h2 {
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.main .box .summary div {
+  display: flex;
+  color: #fff;
+  gap: 30px;
+}
+
+.main .box .summary p {
+  display: flex;
+  gap: 5px;
+}
+
+.main .box .list .title1 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main .box .list .title1 div {
+  display: flex;
+  color: #fff;
+  gap: 30px;
+}
+
+.main .box .list .title1 p {
+  display: flex;
+  gap: 5px;
+}
