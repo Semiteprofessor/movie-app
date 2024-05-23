@@ -7,6 +7,7 @@ import StartRating from "./components/StartRating.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     {/* <App /> */}
-    <StartRating />
+    <StartRating maxRating={5} />
+    <StartRating maxRating={10} />
   </React.StrictMode>
 );
