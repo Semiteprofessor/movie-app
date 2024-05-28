@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa6";
+import PropTypes from "prop-types";
 
 const containerStyle = {
   display: "flex",
@@ -12,18 +13,38 @@ const starContainerStyle = {
   gap: "4px",
 };
 
-const textStyle = {
-  lineHeight: "1",
-  margin: "0",
-};
+// StarRating.propTypes = {
+//   maxRating: PropTypes.number,
+//   color: PropTypes.string,
+//   size: PropTypes.number,
+//   messages: PropTypes.arrayOf(PropTypes.string),
+//   defaultRating: PropTypes.number,
+//   onSetRating: PropTypes.func,
+// };
 
-const StartRating = ({ maxRating = 5, color = "#fcc419", size = 30 }) => {
-  const [rating, setRating] = useState(0);
+const StarRating = ({
+  maxRating = 5,
+  color = "#fcc419",
+  size = 30,
+  messages = [],
+  defaultRating = 0,
+  onSetRating,
+}) => {
+  const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
 
   const handleRating = (rating) => {
     setRating(rating);
+    onSetRating(rating);
   };
+
+  const textStyle = {
+    lineHeight: "1",
+    margin: "0",
+    color,
+    fontSIze: `${size / 1.5}px`,
+  };
+
   return (
     <div style={containerStyle}>
       <div style={starContainerStyle}>
@@ -39,21 +60,38 @@ const StartRating = ({ maxRating = 5, color = "#fcc419", size = 30 }) => {
           />
         ))}
       </div>
-      <p style={textStyle}>{tempRating || rating || ""}</p>
+      <p style={textStyle}>
+        {messages.length === maxRating
+          ? messages[tempRating ? tempRating - 1 : rating - 1]
+          : tempRating || rating || ""}
+      </p>
     </div>
   );
 };
 
 const Star = ({ onRate, full, onHoverIn, onHoverOut, size, color }) => {
+  const starStyle = {
+    width: `${size}px`,
+    height: `${size}px`,
+    display: "block",
+    borderRadius: "50%",
+    cursor: "pointer",
+  };
   return (
-    <span onClick={onRate} onMouseEnter={onHoverIn} onMouseLeave={onHoverOut}>
+    <span
+      role="button"
+      style={starStyle}
+      onClick={onRate}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+    >
       {!full ? (
-        <FaRegStar size={size} color={color} />
+        <FaRegStar size={size} color={color} fill={color} stroke={color} />
       ) : (
-        <FaStar size={size} color={color} />
+        <FaStar size={size} color={color} fill={color} stroke={color} />
       )}
     </span>
   );
 };
 
-export default StartRating;
+export default StarRating;
