@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { NavBar } from "./components/NavBar";
 import { Search } from "./components/Search";
@@ -148,19 +148,59 @@ const average = (arr) => {
 const logo =
   "https://static.vecteezy.com/system/resources/thumbnails/030/347/569/small_2x/ai-generated-image-of-delicious-popcorn-on-a-transparent-background-free-png.png";
 
+const KEY = "59ada9b8";
+
 function App() {
-  const [movies, setMovies] = useState(tempMoviesData);
-  const [watchedMovies, setWatchedMovies] = useState(tempWatchedData);
+  const [query, setQuery] = useState("inception");
+  const [movies, setMovies] = useState([]);
+  const [watchedMovies, setWatchedMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const tempQuery = "interstellar";
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setIsLoading(true);
+        setError("");
+        const response = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Something went wrong with fetching movies");
+        }
+        const data = await response.json();
+        if (data.Response === "False") throw new Error("Movie not found");
+        setMovies(data.Search);
+      } catch (error) {
+        console.log(error.message);
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (query.length < 3) {
+      setMovies([]);
+      setError("");
+      return;
+    }
+    fetchMovies();
+  }, [query]);
+
   return (
     <>
       <NavBar>
         <Logo />
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <Result movies={movies} />
       </NavBar>
       <Main>
+        {/* <Box> {isLoading ? <Loader /> : <MovieList movies={movies} />}</Box> */}
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error} />}
         </Box>
         <Box>
           <WatchedSummary watchedMovies={watchedMovies} />
@@ -170,6 +210,22 @@ function App() {
     </>
   );
 }
+
+const Loader = () => {
+  return (
+    <div className="loader">
+      <img src="./loader1.gif" alt="logo" width={50} />
+    </div>
+  );
+};
+
+const ErrorMessage = (message) => {
+  return (
+    <div className="error-message">
+      <p>{message}</p>
+    </div>
+  );
+};
 
 const Logo = () => {
   return (
@@ -217,12 +273,12 @@ const MovieList = ({ movies }) => {
 const Movie = ({ movie }) => {
   return (
     <li>
-      <img src={movie.poster} alt={`${movie.title} poster`} />
+      <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <div className="title">
-        <h3>{movie.title}</h3>
+        <h3>{movie.Title}</h3>
         <div>
           <p>📅 </p>
-          <span>{movie.year}</span>
+          <span>{movie.Year}</span>
         </div>
       </div>
     </li>
@@ -271,9 +327,9 @@ const WatchedMoviesList = ({ watchedMovies }) => {
 const WatchedMovie = ({ movie }) => {
   return (
     <li>
-      <img src={movie.poster} alt={`${movie.title} poster`} />
+      <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <div className="title1">
-        <h3>{movie.title}</h3>
+        <h3>{movie.Title}</h3>
         <div>
           <p>
             <span>⭐</span>

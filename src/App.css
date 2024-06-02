@@ -70,6 +70,7 @@ nav .nav-container .logo h1 {
   width: 50%;
   height: 100vh;
   position: relative;
+  overflow-y: hidden;
 }
 
 .main .box .btn-toggle {
@@ -176,4 +177,11 @@ nav .nav-container .logo h1 {
 .main .box .list .title1 p {
   display: flex;
   gap: 5px;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
