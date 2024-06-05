@@ -181,6 +181,12 @@ function App() {
     }
   };
 
+  const handleDeleteWatched = (id) => {
+    setWatchedMovies((watchedMovies) =>
+      watchedMovies.filter((movie) => movie.imdbID !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -233,11 +239,15 @@ function App() {
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
               onAddWatched={handleAddWateched}
+              watchedMovies={watchedMovies}
             />
           ) : (
             <>
               <WatchedSummary watchedMovies={watchedMovies} />
-              <WatchedMoviesList watchedMovies={watchedMovies} />
+              <WatchedMoviesList
+                watchedMovies={watchedMovies}
+                onDeleteWatched={handleDeleteWatched}
+              />
             </>
           )}
         </Box>
@@ -322,9 +332,23 @@ const Movie = ({ movie, onSelectMovie }) => {
   );
 };
 
-const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched }) => {
+const MovieDetails = ({
+  selectedId,
+  onCloseMovie,
+  onAddWatched,
+  watchedMovies,
+}) => {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState("");
+
+  const isWatched = watchedMovies
+    .map((movie) => movie.imdbID)
+    .includes(selectedId);
+
+  const watchedUserRating = watchedMovies.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
 
   const {
     Title,
@@ -347,6 +371,7 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched }) => {
       Poster,
       imdbRating: Number(imdbRating),
       Runtime: Number(Runtime.split(" ").at(0)),
+      userRating,
     };
     onAddWatched(newWatchedMovie);
     onCloseMovie();
@@ -401,10 +426,25 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched }) => {
       )}
       <section>
         <div className="rating">
-          <StarRating maxRating={10} size={24} />
-          <button className="add-btn" onClick={handleAdd}>
-            + Add to List
-          </button>
+          {!isWatched ? (
+            <>
+              <StarRating
+                maxRating={10}
+                size={24}
+                onSetRating={setUserRating}
+              />
+              {userRating > 0 && (
+                <button className="add-btn" onClick={handleAdd}>
+                  + Add to List
+                </button>
+              )}
+            </>
+          ) : (
+            <p>
+              You rated this movie {watchedUserRating}
+              <span>⭐</span>
+            </p>
+          )}
         </div>
         <p>
           <em>{Plot}</em>
@@ -445,7 +485,7 @@ const WatchedSummary = ({ watchedMovies }) => {
   );
 };
 
-const WatchedMoviesList = ({ watchedMovies }) => {
+const WatchedMoviesList = ({ watchedMovies, onDeleteWatched }) => {
   return (
     <ul className="list">
       {watchedMovies?.map((movie) => (
