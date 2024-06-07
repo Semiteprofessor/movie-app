@@ -188,6 +188,7 @@ function App() {
   };
 
   useEffect(() => {
+    const controller = AbortController();
     const fetchMovies = async () => {
       try {
         setIsLoading(true);
@@ -392,6 +393,15 @@ const MovieDetails = ({
     getMovieDetails();
   }, [selectedId]);
 
+  useEffect(() => {
+    if (!Title) return;
+    document.title = `Movie - ${Title}`;
+
+    return () => {
+      document.title = "usePopCorn";
+    };
+  }, [Title]);
+
   return (
     <div className="details">
       {isLoading ? (
@@ -459,7 +469,7 @@ const MovieDetails = ({
 const WatchedSummary = ({ watchedMovies }) => {
   const avgImdbRating = average(watchedMovies.map((movie) => movie.imdbRating));
   const avgUserRating = average(watchedMovies.map((movie) => movie.userRating));
-  const avgRuntime = average(watchedMovies.map((movie) => movie.runtime));
+  const avgRuntime = average(watchedMovies.map((movie) => movie.Runtime));
   return (
     <div className="summary">
       <h2>Movies you watched</h2>
@@ -470,7 +480,7 @@ const WatchedSummary = ({ watchedMovies }) => {
         </p>
         <p>
           <span>⭐</span>
-          <span>{avgImdbRating}</span>
+          <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
           <span>🌟</span>
@@ -489,13 +499,17 @@ const WatchedMoviesList = ({ watchedMovies, onDeleteWatched }) => {
   return (
     <ul className="list">
       {watchedMovies?.map((movie) => (
-        <WatchedMovie movie={movie} key={movie.imdbID} />
+        <WatchedMovie
+          movie={movie}
+          key={movie.imdbID}
+          onDeleteWatched={onDeleteWatched}
+        />
       ))}
     </ul>
   );
 };
 
-const WatchedMovie = ({ movie }) => {
+const WatchedMovie = ({ movie, onDeleteWatched }) => {
   return (
     <li>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
@@ -512,8 +526,14 @@ const WatchedMovie = ({ movie }) => {
           </p>
           <p>
             <span>⏳</span>
-            <span>{movie.runtime} min</span>
+            <span>{movie.Runtime} min</span>
           </p>
+          <button
+            className="btn-delete"
+            onClick={() => onDeleteWatched(movie.imdbID)}
+          >
+            X
+          </button>
         </div>
       </div>
     </li>
