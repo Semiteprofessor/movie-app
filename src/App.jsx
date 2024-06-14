@@ -154,7 +154,7 @@ const logo =
 const KEY = "59ada9b8";
 
 function App() {
-  const [query, setQuery] = useState("interstellar");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watchedMovies, setWatchedMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -386,6 +386,19 @@ const MovieDetails = ({
     onAddWatched(newWatchedMovie);
     onCloseMovie();
   };
+
+  useEffect(() => {
+    const callback = (event) => {
+      if (event.code === "Escape") {
+        onCloseMovie();
+      }
+    };
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [onCloseMovie]);
 
   useEffect(() => {
     const getMovieDetails = async () => {
